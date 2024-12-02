@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<suite name="Open Cart Regression" thread-count="2" parallel="tests" verbose="4">
+
+ <listeners>
+        <listener class-name="com.qa.opencart.listeners.ExtentReportListeners" />
+    </listeners>
+
+
+  <test name="HomePageTestCase">
+    <classes>
+      <class name="com.qa.opencart.testcases.HomePageTestCase"/>
+    </classes> <!-- Close classes tag -->
+  </test> <!-- HomePageTestCase -->
+  
+  <test name="LoginPageTestCase">
+    <classes>
+      <class name="com.qa.opencart.testcases.LoginPageTestCase"/>
+    </classes> <!-- Close classes tag -->
+  </test> <!-- HomePageTestCase -->
+
+</suite> <!-- Open Cart Regression -->
