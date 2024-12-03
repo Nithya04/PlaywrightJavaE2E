@@ -20,10 +20,29 @@ public class BaseTest {
 
 	@BeforeTest
 	public void setUp() {
-		pf=new PlaywrightFactory();
-		prop=pf.init_prop();
-		page=pf.initBrowser(prop);
-		hp=new HomePage(page);
+		try {
+	        System.out.println("Starting test setup...");
+
+	        // Initialize Playwright Factory
+	        pf = new PlaywrightFactory();
+	        System.out.println("PlaywrightFactory initialized: " + (pf != null));
+
+	        // Load Properties
+	        prop = pf.init_prop();
+	        System.out.println("Properties loaded: " + (prop != null));
+
+	        // Initialize Browser and Page
+	        page = pf.initBrowser(prop);
+	        System.out.println("Browser and Page initialized: " + (page != null));
+
+	        // Initialize HomePage
+	        hp = new HomePage(page);
+	        System.out.println("HomePage initialized: " + (hp != null));
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new RuntimeException("Setup failed: " + e.getMessage());
+	    }
+	}
 		
 	}
 	
