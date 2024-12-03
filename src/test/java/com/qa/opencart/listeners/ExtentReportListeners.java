@@ -1,7 +1,5 @@
 package com.qa.opencart.listeners;
 
-  
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,67 +49,67 @@ public class ExtentReportListeners implements ITestListener {
     }
 
     @Override
-	public synchronized void onStart(ITestContext context) {
-		System.out.println("Test Suite started!");
-		
-	}
+    public synchronized void onStart(ITestContext context) {
+        System.out.println("Test Suite started!");
+    }
 
-	@Override
-	public synchronized void onFinish(ITestContext context) {
-		System.out.println(("Test Suite is ending!"));
-		extent.flush();
-		test.remove();
-	}
+    @Override
+    public synchronized void onFinish(ITestContext context) {
+        System.out.println("Test Suite is ending!");
+        extent.flush(); // Save all test results to the report
+        test.remove();
+    }
 
-	@Override
-	public synchronized void onTestStart(ITestResult result) {
-		String methodName = result.getMethod().getMethodName();
-		String qualifiedName = result.getMethod().getQualifiedName();
-		int last = qualifiedName.lastIndexOf(".");
-		int mid = qualifiedName.substring(0, last).lastIndexOf(".");
-		String className = qualifiedName.substring(mid + 1, last);
+    @Override
+    public synchronized void onTestStart(ITestResult result) {
+        String methodName = result.getMethod().getMethodName();
+        ExtentTest extentTest = extent.createTest(methodName, result.getMethod().getDescription());
+        extentTest.assignCategory(result.getTestContext().getSuite().getName());
+        test.set(extentTest);
+        test.get().getModel().setStartTime(getTime(result.getStartMillis()));
+    }
 
-		System.out.println(methodName + " started!");
-		ExtentTest extentTest = extent.createTest(result.getMethod().getMethodName(),
-				result.getMethod().getDescription());
+    @Override
+    public synchronized void onTestSuccess(ITestResult result) {
+        System.out.println(result.getMethod().getMethodName() + " passed!");
+        test.get().pass("Test passed");
+        test.get().getModel().setEndTime(getTime(result.getEndMillis()));
+    }
 
-		extentTest.assignCategory(result.getTestContext().getSuite().getName());
-		/*
-		 * methodName = StringUtils.capitalize(StringUtils.join(StringUtils.
-		 * splitByCharacterTypeCamelCase(methodName), StringUtils.SPACE));
-		 */
-		extentTest.assignCategory(className);
-		test.set(extentTest);
-		test.get().getModel().setStartTime(getTime(result.getStartMillis()));
-	}
+    @Override
+    public synchronized void onTestFailure(ITestResult result) {
+        System.out.println(result.getMethod().getMethodName() + " failed!");
+        try {
+            String screenshotBase64 = takeScreenshot();
+            test.get().fail(result.getThrowable(), 
+                MediaEntityBuilder.createScreenCaptureFromBase64String(screenshotBase64, result.getMethod().getMethodName()).build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        test.get().getModel().setEndTime(getTime(result.getEndMillis()));
+    }
 
-	public synchronized void onTestSuccess(ITestResult result) {
-		System.out.println((result.getMethod().getMethodName() + " passed!"));
-		test.get().pass("Test passed");
-		test.get().pass(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot(),result.getMethod().getMethodName()).build());
-		test.get().getModel().setEndTime(getTime(result.getEndMillis()));
-	}
+    @Override
+    public synchronized void onTestSkipped(ITestResult result) {
+        System.out.println(result.getMethod().getMethodName() + " skipped!");
+        try {
+            String screenshotBase64 = takeScreenshot();
+            test.get().skip(result.getThrowable(), 
+                MediaEntityBuilder.createScreenCaptureFromBase64String(screenshotBase64, result.getMethod().getMethodName()).build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        test.get().getModel().setEndTime(getTime(result.getEndMillis()));
+    }
 
-	public synchronized void onTestFailure(ITestResult result) {
-		System.out.println((result.getMethod().getMethodName() + " failed!"));
-		test.get().fail(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot(),result.getMethod().getMethodName()).build());
-		test.get().getModel().setEndTime(getTime(result.getEndMillis()));
-	} 
+    @Override
+    public synchronized void onTestFailedButWithinSuccessPercentage(ITestResult result) {
+        System.out.println("onTestFailedButWithinSuccessPercentage for " + result.getMethod().getMethodName());
+    }
 
-	public synchronized void onTestSkipped(ITestResult result) {
-		System.out.println((result.getMethod().getMethodName() + " skipped!"));
-		test.get().skip(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot(), result.getMethod().getMethodName()).build());
-		test.get().getModel().setEndTime(getTime(result.getEndMillis()));
-	}
-
-	public synchronized void onTestFailedButWithinSuccessPercentage(ITestResult result) {
-		System.out.println(("onTestFailedButWithinSuccessPercentage for " + result.getMethod().getMethodName()));
-	}
-
-	private Date getTime(long millis) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(millis);
-		return calendar.getTime();
-	}
+    private Date getTime(long millis) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        return calendar.getTime();
+    }
 }
-

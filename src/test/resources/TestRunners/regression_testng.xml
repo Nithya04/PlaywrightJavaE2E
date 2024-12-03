@@ -2,21 +2,20 @@
 
 <suite name="Open Cart Regression" thread-count="2" parallel="tests" verbose="4">
 
- <listeners>
+    <listeners>
         <listener class-name="com.qa.opencart.listeners.ExtentReportListeners" />
     </listeners>
 
+    <test name="HomePageTestCase">
+        <classes>
+            <class name="com.qa.opencart.testcases.HomePageTestCase" />
+        </classes>
+    </test>
 
-  <test name="HomePageTestCase">
-    <classes>
-      <class name="com.qa.opencart.testcases.HomePageTestCase"/>
-    </classes> <!-- Close classes tag -->
-  </test> <!-- HomePageTestCase -->
-  
-  <test name="LoginPageTestCase">
-    <classes>
-      <class name="com.qa.opencart.testcases.LoginPageTestCase"/>
-    </classes> <!-- Close classes tag -->
-  </test> <!-- HomePageTestCase -->
+    <test name="LoginPageTestCase">
+        <classes>
+            <class name="com.qa.opencart.testcases.LoginPageTestCase" />
+        </classes>
+    </test>
 
-</suite> <!-- Open Cart Regression -->
+</suite>
