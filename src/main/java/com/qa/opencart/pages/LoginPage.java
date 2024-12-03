@@ -27,6 +27,7 @@ public class LoginPage {
 	
 		page.fill(passwordText, password);
 		page.click(loginBtn);
+		
 		if(page.isVisible(myaccLink)) {
 			System.out.println("User has been logged in");
 			return true;			

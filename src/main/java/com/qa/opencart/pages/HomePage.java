@@ -1,5 +1,6 @@
 package com.qa.opencart.pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
 public class HomePage {
@@ -20,9 +21,31 @@ public class HomePage {
 		this.page=page;
 	}
 	
+	// Get Locator methods for elements
+    public Locator getSearchField() {
+        return page.locator(searchField);
+    }
+
+    public Locator getSearchIcon() {
+        return page.locator(searchIcon);
+    }
+
+    public Locator getSearchHeader() {
+        return page.locator(searchHeader);
+    }
+
+    public Locator getMyAccount() {
+        return page.locator(myAccount);
+    }
+
+    public Locator getLoginLink() {
+        return page.locator(loginLink);
+    }
+
 	
 	//page actions
 	public String getHomePageTitle() {
+		
 		String title= page.title();
 		System.out.println("Home Page Title IS"+title);
 		return title;

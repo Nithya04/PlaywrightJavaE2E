@@ -2,7 +2,7 @@ package com.qa.opencart.testcases;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
+import com.qa.opencart.utils.ScreenShotUtils;
 import com.qa.opencart.base.BaseTest;
 import com.qa.opencart.constant.AppConstants;
 import com.qa.opencart.pages.HomePage;
@@ -27,7 +27,9 @@ public class LoginPageTestCase extends BaseTest {
 	@Test(priority = 3)
 	
 	public void validateLogin() {
+		ScreenShotUtils.captureScreenshot(page);
 		lp.login(prop.getProperty("username"), prop.getProperty("password"));
+		ScreenShotUtils.captureFullPageScreenshot(page);
 		//Assert.assertTrue(lp.lopgin(prop.getProperty("username").trim(), prop.getProperty("password").trim())); 
 	}
 	
